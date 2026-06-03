@@ -47,4 +47,3 @@ This separation keeps telemetry processing and hardware control isolated and eas
 
 ---
 
-## Motivation
