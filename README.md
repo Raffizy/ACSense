@@ -10,7 +10,7 @@ The goal of the project is to explore real-time telemetry processing, hardware i
 ## Architecture
 The system is split into two independent components:
 
-- **Telemetry Reader (C#)**  
+- **Telemetry Reader (Python)**  
   Reads real-time telemetry from Assetto Corsa via shared memory and outputs normalized values (e.g. throttle and brake).
 
 - **DualSense Controller (Python)**  
@@ -33,7 +33,6 @@ This separation keeps telemetry processing and hardware control isolated and eas
 
 ## Tech Stack
 - **Python** — DualSense HID control and trigger mapping
-- **C#** — Assetto Corsa telemetry reader
 - **Windows** — Target platform
 
 ---
@@ -42,7 +41,7 @@ This separation keeps telemetry processing and hardware control isolated and eas
 **In progress**
 
 - DualSense adaptive trigger control implemented in Python
-- Telemetry extraction currently being replaced with a stable C# implementation
+- Telemetry extraction currently being replaced with a stable Python implementation
 - Minimum viable version targets throttle and brake support only
 
 ---

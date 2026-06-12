@@ -1,21 +1,106 @@
-import time
-from pyaccsharedmemory import ACCSharedMemory
+import ctypes
 
-ac = ACCSharedMemory()
+class SPageFilePhysics(ctypes.Structure):
+    _fields_ = [
+        ("packetId", ctypes.c_int),
+        ("gas", ctypes.c_float),
+        ("brake", ctypes.c_float),
+        ("fuel", ctypes.c_float),
+        ("gear", ctypes.c_int),
+        ("rpms", ctypes.c_int),
+        ("steerAngle", ctypes.c_float),
+        ("speedKmh", ctypes.c_float),
 
-print("Waiting for Assetto Corsa telemetry...")
+        ("velocity", ctypes.c_float * 3),
+        ("accG", ctypes.c_float * 3),
+
+        ("wheelSlip", ctypes.c_float * 4),
+        ("wheelLoad", ctypes.c_float * 4),
+        ("wheelsPressure", ctypes.c_float * 4),
+        ("wheelAngularSpeed", ctypes.c_float * 4),
+
+        ("tyreWear", ctypes.c_float * 4),
+        ("tyreDirtyLevel", ctypes.c_float * 4),
+        ("tyreCoreTemperature", ctypes.c_float * 4),
+
+        ("camberRAD", ctypes.c_float * 4),
+        ("suspensionTravel", ctypes.c_float * 4),
+
+        ("drs", ctypes.c_float),
+        ("tc", ctypes.c_float),
+
+        ("heading", ctypes.c_float),
+        ("pitch", ctypes.c_float),
+        ("roll", ctypes.c_float),
+
+        ("cgHeight", ctypes.c_float),
+
+        ("carDamage", ctypes.c_float * 5),
+
+        ("numberOfTyresOut", ctypes.c_int),
+
+        ("pitLimiterOn", ctypes.c_int),
+        ("abs", ctypes.c_float),
+
+        ("kersCharge", ctypes.c_float),
+        ("kersInput", ctypes.c_float),
+
+        ("autoShifterOn", ctypes.c_int),
+
+        ("rideHeight", ctypes.c_float * 2),
+
+        ("turboBoost", ctypes.c_float),
+
+        ("ballast", ctypes.c_float),
+        ("airDensity", ctypes.c_float),
+
+        ("airTemp", ctypes.c_float),
+        ("roadTemp", ctypes.c_float),
+
+        ("localAngularVel", ctypes.c_float * 3),
+
+        ("finalFF", ctypes.c_float),
+
+        ("performanceMeter", ctypes.c_float),
+
+        ("engineBrake", ctypes.c_int),
+
+        ("ersRecoveryLevel", ctypes.c_int),
+        ("ersPowerLevel", ctypes.c_int),
+        ("ersHeatCharging", ctypes.c_int),
+        ("ersIsCharging", ctypes.c_int),
+        ("kersCurrentKJ", ctypes.c_float),
+
+        ("drsAvailable", ctypes.c_int),
+        ("drsEnabled", ctypes.c_int),
+
+        ("brakeTemp", ctypes.c_float * 4),
+
+        ("clutch", ctypes.c_float),
+
+        ("tyreTempI", ctypes.c_float * 4),
+        ("tyreTempM", ctypes.c_float * 4),
+        ("tyreTempO", ctypes.c_float * 4),
+
+        ("isAIControlled", ctypes.c_int),
+
+        ("tyreContactPoint", ctypes.c_float * 12),
+        ("tyreContactNormal", ctypes.c_float * 12),
+        ("tyreContactHeading", ctypes.c_float * 12),
+
+        ("brakeBias", ctypes.c_float),
+
+        ("localVelocity", ctypes.c_float * 3)
+    ]
+
+import mmap
+import ctypes
+
+mm = mmap.mmap(0, ctypes.sizeof(SPageFilePhysics), "acpmf_physics")
 
 while True:
-    ac.read()
+    physics = SPageFilePhysics.from_buffer_copy(mm)
 
-    physics = ac.physics
-
-    print(
-        f"RPM: {physics.rpm:6.0f} | "
-        f"Speed: {physics.speedKmh:6.1f} km/h | "
-        f"Throttle: {physics.gas:.2f} | "
-        f"Brake: {physics.brake:.2f} | "
-        f"Gear: {physics.gear}"
-    )
-
-    time.sleep(0.01)
+    print("Speed:", physics.speedKmh)
+    print("RPM:", physics.rpms)
+    print("Gear:", physics.gear)
