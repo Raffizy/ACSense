@@ -45,15 +45,15 @@ while not ds.state.R1:
     
 
 
-    brake_force = int(brake * 1)
-    brake_force = max(0, min(255, brake_force))
+    #brake_force = int(brake * 1)
+    #brake_force = max(0, min(255, brake_force))
 
-    gas_force = int((gas ** 1.5) * 200)  # smoother curve
-    gas_force = max(0, min(255, gas_force))
+    #gas_force = int((gas ** 1.5) * 200)  # smoother curve
+    #gas_force = max(0, min(255, gas_force))
 
 
-    ds.triggerL.setForce(1, brake_force)
-    ds.triggerR.setForce(1, gas_force)
+    ds.triggerL.setForce(1, 240)
+    ds.triggerR.setForce(1, 250)
 
     time.sleep(0.01)
 
