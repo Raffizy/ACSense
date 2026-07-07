@@ -1,10 +1,12 @@
+
 import ctypes
 import mmap
 import time
-import tkinter as tk
+from tkinter import *
 from pydualsense import *
 
 
+# Assetto Corsa telemetry structure
 class SPageFilePhysics(ctypes.Structure):
     _fields_ = [
         ("packetId", ctypes.c_int),
@@ -18,52 +20,71 @@ class SPageFilePhysics(ctypes.Structure):
     ]
 
 
+# Connect to Assetto Corsa shared memory
 mm = mmap.mmap(0, ctypes.sizeof(SPageFilePhysics), "acpmf_physics")
 
+
+# ---------------- GUI ---------------- #
+
+root = Tk()
+root.geometry("180x150")
+root.title("Trigger Tester")
+
+Label(root, text="Left Bump").grid(row=0, column=0)
+Label(root, text="Right Bump").grid(row=0, column=1)
+
+LeftBump = Scale(root, from_=255, to=0)
+RightBump = Scale(root, from_=255, to=0)
+
+LeftBump.grid(row=1, column=0, padx=20, pady=10)
+RightBump.grid(row=1, column=1, padx=20, pady=10)
+
+
+# ------------- DualSense ------------ #
 
 ds = pydualsense()
 ds.init()
 
-
-
-print("Drive Simulation prototype")
-
-ds.triggerR.setMode(TriggerModes.Rigid)
 ds.triggerL.setMode(TriggerModes.Rigid)
+ds.triggerR.setMode(TriggerModes.Rigid)
 
+print("Drive Simulation Prototype")
+print("Press R1 to exit")
+
+
+# -------------- Main Loop ------------ #
 
 while not ds.state.R1:
+    root.update()
 
-    #telemetry
     physics = SPageFilePhysics.from_buffer_copy(mm)
 
     rpm = physics.rpms
     brake = physics.brake
     gas = physics.gas
     speed = physics.speedKmh
-    #debug
-    time.sleep(1)
-    print(f"Speed: {speed:.1f} | RPM: {rpm} | Gas: {gas:.2f} | Brake: {brake:.2f}")
 
-    
+    ds.triggerL.setForce(1, LeftBump.get())
+    ds.triggerR.setForce(1, RightBump.get())
 
-
-    #brake_force = int(brake * 1)
-    #brake_force = max(0, min(255, brake_force))
-
-    #gas_force = int((gas ** 1.5) * 200)  # smoother curve
-    #gas_force = max(0, min(255, gas_force))
-
-
-    ds.triggerL.setForce(1, 240)
-    ds.triggerR.setForce(1, 250)
+    print(
+        f"Speed: {speed:.1f} | "
+        f"RPM: {rpm} | "
+        f"Gas: {gas:.2f} | "
+        f"Brake: {brake:.2f}"
+    )
 
     time.sleep(0.01)
 
 
-ds.triggerR.setMode(TriggerModes.Off)
+# -------------- Cleanup -------------- #
+
 ds.triggerL.setMode(TriggerModes.Off)
+ds.triggerR.setMode(TriggerModes.Off)
+
 time.sleep(0.02)
+
 ds.close()
+root.destroy()
 
 print("Device Closed")
