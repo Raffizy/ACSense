@@ -1,6 +1,7 @@
 import ctypes
 import mmap
 import time
+import tkinter as tk
 from pydualsense import *
 
 
@@ -22,6 +23,12 @@ mm = mmap.mmap(0, ctypes.sizeof(SPageFilePhysics), "acpmf_physics")
 
 ds = pydualsense()
 ds.init()
+
+#Creating a gui for the project
+#Window = tk.Tk()
+#Window.title("AcSense")
+#Window.geometry("300 x 200")
+
 
 print("Drive Simulation prototype")
 
@@ -64,3 +71,4 @@ time.sleep(0.02)
 ds.close()
 
 print("Device Closed")
+#Window.mainloop()
