@@ -1,11 +1,12 @@
+****Ai placeholder****
+
 # ACSence | DualSense Adaptive Trigger Integration for Assetto Corsa
+
+
 
 ## Overview
 This project integrates real-time telemetry from Assetto Corsa with the PlayStation DualSense controller, mapping driving inputs such as throttle and brake pressure to adaptive trigger resistance to enhance driving immersion.
 
-The goal of the project is to explore real-time telemetry processing, hardware interaction, and low-latency feedback using a modular, hybrid architecture.
-
----
 
 ## Architecture
 The system is split into two independent components:
